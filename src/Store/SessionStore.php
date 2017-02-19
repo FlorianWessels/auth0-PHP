@@ -25,7 +25,8 @@ class SessionStore
     /**
      * @see Oauth2Client
      */
-    public function __construct() {
+    public function __construct()
+    {
 
         $this->initSession();
     }
@@ -36,13 +37,13 @@ class SessionStore
      *
      * @return void
      */
-    private function initSession() {
+    private function initSession()
+    {
         if (!session_id()) {
             session_set_cookie_params(60 * 60 * 24 * 7); //seven days
             session_start();
         }
     }
-
 
 
     /**
@@ -51,22 +52,36 @@ class SessionStore
      * @param string $key
      * @param mixed $value
      */
-    public function set($key, $value) {
+    public function set($key, $value)
+    {
         $key_name = $this->getSessionKeyName($key);
 
         $_SESSION[$key_name] = $value;
     }
 
     /**
+     * Constructs a session var name.
+     *
+     * @param  string $key
+     *
+     * @return string
+     */
+    public function getSessionKeyName($key)
+    {
+        return self::BASE_NAME . '_' . $key;
+    }
+
+    /**
      * Gets persisted values idetified by $key.
      * If the value is not setted, returns $default.
      *
-     * @param  string  $key
-     * @param  mixed   $default
+     * @param  string $key
+     * @param  mixed $default
      *
      * @return mixed
      */
-    public function get($key, $default=null) {
+    public function get($key, $default = null)
+    {
         $key_name = $this->getSessionKeyName($key);
 
         if (isset($_SESSION[$key_name])) {
@@ -81,22 +96,10 @@ class SessionStore
      *
      * @param  string $key
      */
-    public function delete($key) {
+    public function delete($key)
+    {
         $key_name = $this->getSessionKeyName($key);
 
         unset($_SESSION[$key_name]);
-    }
-
-
-
-    /**
-     * Constructs a session var name.
-     *
-     * @param  string $key
-     *
-     * @return string
-     */
-    public function getSessionKeyName($key) {
-        return self::BASE_NAME . '_' . $key;
     }
 }

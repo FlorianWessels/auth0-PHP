@@ -10,9 +10,9 @@ namespace Auth0\SDK\API\Helpers;
 
 use Auth0\SDK\API\Header\Header;
 
-class ApiClient {
-
-    const API_VERSION  = "4.0.7";
+class ApiClient
+{
+    const API_VERSION = "4.0.7";
 
     /**
      * @var bool
@@ -23,51 +23,18 @@ class ApiClient {
      * @var InformationHeaders
      */
     protected static $infoHeadersData;
-
-    /**
-     * @param InformationHeaders $infoHeadersData
-     * @return null
-     */
-    public static function setInfoHeadersData(InformationHeaders $infoHeadersData) {
-        if (!self::$infoHeadersDataEnabled) return null;
-
-        self::$infoHeadersData = $infoHeadersData;
-    }
-
-    /**
-     * @return InformationHeaders|null
-     */
-    public static function getInfoHeadersData() {
-        if (!self::$infoHeadersDataEnabled) return null;
-
-        if (self::$infoHeadersData === null) {
-            self::$infoHeadersData = new InformationHeaders;
-
-            self::$infoHeadersData->setPackage('auth0-php', self::API_VERSION);
-            self::$infoHeadersData->setEnvironment('PHP', phpversion());
-        }
-        return self::$infoHeadersData;
-    }
-
-    public static function disableInfoHeaders(){
-        self::$infoHeadersDataEnabled = false;
-    }
-
     /**
      * @var string
      */
     protected $domain;
-
     /**
      * @var string
      */
     protected $basePath;
-
     /**
      * @var array
      */
     protected $headers;
-
     /**
      * @var array
      */
@@ -77,7 +44,8 @@ class ApiClient {
      * ApiClient constructor.
      * @param array $config
      */
-    public function __construct($config) {
+    public function __construct($config)
+    {
         $this->basePath = $config['basePath'];
         $this->domain = $config['domain'];
         $this->headers = isset($config['headers']) ? $config['headers'] : [];
@@ -89,18 +57,55 @@ class ApiClient {
     }
 
     /**
+     * @return InformationHeaders|null
+     */
+    public static function getInfoHeadersData()
+    {
+        if (!self::$infoHeadersDataEnabled) {
+            return null;
+        }
+
+        if (self::$infoHeadersData === null) {
+            self::$infoHeadersData = new InformationHeaders;
+
+            self::$infoHeadersData->setPackage('auth0-php', self::API_VERSION);
+            self::$infoHeadersData->setEnvironment('PHP', phpversion());
+        }
+        return self::$infoHeadersData;
+    }
+
+    /**
+     * @param InformationHeaders $infoHeadersData
+     * @return null
+     */
+    public static function setInfoHeadersData(InformationHeaders $infoHeadersData)
+    {
+        if (!self::$infoHeadersDataEnabled) {
+            return null;
+        }
+
+        self::$infoHeadersData = $infoHeadersData;
+    }
+
+    public static function disableInfoHeaders()
+    {
+        self::$infoHeadersDataEnabled = false;
+    }
+
+    /**
      * @param string $name
      * @param array $arguments
      *
      * @return RequestBuilder
      */
-    public function __call($name, $arguments) {
-        $builder = new RequestBuilder(array(
+    public function __call($name, $arguments)
+    {
+        $builder = new RequestBuilder([
             'domain' => $this->domain,
             'basePath' => $this->basePath,
             'method' => $name,
-            'guzzleOptions' => $this->guzzleOptions
-        ));
+            'guzzleOptions' => $this->guzzleOptions,
+        ]);
 
         return $builder->withHeaders($this->headers);
     }

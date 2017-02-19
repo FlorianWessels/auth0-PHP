@@ -13,4 +13,6 @@ namespace Auth0\SDK\Exception;
  *
  * @author Auth0
  */
-class CoreException extends \Exception { }
+class CoreException extends \Exception
+{
+}
