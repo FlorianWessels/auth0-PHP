@@ -4,11 +4,11 @@ namespace Auth0\SDK;
 
 use Auth0\SDK\Exception\CoreException;
 use Auth0\SDK\Exception\InvalidTokenException;
-use Auth0\SDK\Exception\ApiException;
 use Auth0\SDK\Helpers\JWKFetcher;
 use Firebase\JWT\JWT;
 
-class JWTVerifier {
+class JWTVerifier
+{
 
     protected $JWKFetcher = null;
     protected $suported_algs = null;
@@ -30,7 +30,8 @@ class JWTVerifier {
      * @param array $config
      * @throws CoreException
      */
-    public function __construct($config) {
+    public function __construct($config)
+    {
 
         $cache = null;
         $guzzleOptions = [];
@@ -96,9 +97,8 @@ class JWTVerifier {
         $body64 = $tks[1];
         $head = json_decode(JWT::urlsafeB64Decode($headb64));
 
-        if ( !is_object($head) || ! isset($head->alg))
-        {
-              throw new InvalidTokenException("Invalid token");
+        if (!is_object($head) || !isset($head->alg)) {
+            throw new InvalidTokenException("Invalid token");
         }
 
         if (!in_array($head->alg, $this->suported_algs)) {
@@ -107,32 +107,32 @@ class JWTVerifier {
 
         if ($head->alg === 'RS256') {
             $body = json_decode(JWT::urlsafeB64Decode($body64));
-            if ( !in_array($body->iss, $this->authorized_iss) ) {
+            if (!in_array($body->iss, $this->authorized_iss)) {
                 throw new CoreException("We can't trust on a token issued by: `{$body->iss}`.");
             }
             $secret = $this->JWKFetcher->fetchKeys($body->iss);
         } elseif ($head->alg === 'HS256') {
-          if ($this->secret_base64_encoded) {
-            $secret = JWT::urlsafeB64Decode($this->client_secret);
-          } else {
-            $secret = $this->client_secret;
-          }
+            if ($this->secret_base64_encoded) {
+                $secret = JWT::urlsafeB64Decode($this->client_secret);
+            } else {
+                $secret = $this->client_secret;
+            }
         } else {
             throw new InvalidTokenException("Invalid signature algorithm");
         }
 
         try {
             // Decode the user
-            $decodedToken = JWT::decode($jwt, $secret, array('HS256', 'RS256'));
+            $decodedToken = JWT::decode($jwt, $secret, ['HS256', 'RS256']);
             // validate that this JWT was made for us
             $audience = $decodedToken->aud;
-            if (! is_array($audience)) {
+            if (!is_array($audience)) {
                 $audience = [$audience];
             }
             if (count(array_intersect($audience, $this->valid_audiences)) == 0) {
                 throw new InvalidTokenException("This token is not intended for us.");
             }
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new CoreException($e->getMessage());
         }
         return $decodedToken;

@@ -5,32 +5,33 @@ namespace Auth0\SDK\API\Management;
 use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\SDK\API\Header\ContentType;
 
-class Logs extends GenericResource 
+class Logs extends GenericResource
 {
     /**
      * @param string $id
      * @return mixed
      */
-  public function get($id) 
-  {
-    return $this->apiClient->get()
-      ->logs($id)
-      ->call();
-  }
+    public function get($id)
+    {
+        return $this->apiClient->get()
+            ->logs($id)
+            ->call();
+    }
 
     /**
      * @param array $params
      * @return mixed
      */
-  public function search($params = array()) {
+    public function search($params = [])
+    {
 
-    $client = $this->apiClient->get()
-        ->logs();
+        $client = $this->apiClient->get()
+            ->logs();
 
-    foreach ($params as $param => $value) {
-        $client->withParam($param, $value);
+        foreach ($params as $param => $value) {
+            $client->withParam($param, $value);
+        }
+
+        return $client->call();
     }
-
-    return $client->call();
-  }
 }
