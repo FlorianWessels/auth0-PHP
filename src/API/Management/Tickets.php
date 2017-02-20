@@ -99,6 +99,6 @@ class Tickets extends GenericResource
         $result_url = null,
         $connection_id = null
     ) {
-        return $this->createPasswordChangeTicketRaw(null, $mail, $new_password, $result_url, $connection_id);
+        return $this->createPasswordChangeTicketRaw(null, $email, $new_password, $result_url, $connection_id);
     }
 }

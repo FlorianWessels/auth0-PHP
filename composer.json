@@ -1,5 +1,5 @@
 {
-  "name": "auth0/auth0-php",
+  "name": "florianwessels/auth0-php",
   "description": "Auth0 PHP SDK.",
   "type": "library",
   "authors": [

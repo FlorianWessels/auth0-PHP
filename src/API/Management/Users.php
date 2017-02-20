@@ -35,7 +35,7 @@ class Users extends GenericResource
     }
 
     /**
-     * @param array $data
+     * @param object $data
      * @return mixed
      */
     public function create($data)
